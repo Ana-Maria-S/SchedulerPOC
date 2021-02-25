@@ -1,5 +1,7 @@
 using Microsoft.Extensions.Hosting;
 using Quartz;
+using Quartz.Impl;
+using System.Collections.Specialized;
 
 namespace SchedulerPOC
 {
@@ -16,7 +18,12 @@ namespace SchedulerPOC
                 {
                     services.AddQuartz(q =>
                     {
-                        q.UseMicrosoftDependencyInjectionScopedJobFactory();
+                    q.UseMicrosoftDependencyInjectionScopedJobFactory();
+                    q.AddJob<ReportingJob>(x => x.WithIdentity("ReportingJob")
+                                                 .StoreDurably(true));
+                    q.AddTrigger(x => x.WithIdentity("ReportingTrigger")
+                                       .ForJob("ReportingJob")
+                                       .WithCalendarIntervalSchedule(x => x.WithIntervalInDays(1)));
                     }
                     );
                     services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);

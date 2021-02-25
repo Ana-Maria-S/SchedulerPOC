@@ -1,6 +1,7 @@
 ﻿using Quartz;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,7 +11,16 @@ namespace SchedulerPOC
     {
         public Task Execute(IJobExecutionContext context)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Console.WriteLine("Job triggered: " + DateTime.Now);
+                return Task.FromResult(0);
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw ex;
+            }
         }
     }
 }
